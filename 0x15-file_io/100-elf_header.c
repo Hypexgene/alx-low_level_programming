@@ -20,10 +20,12 @@ void print_osabi(unsigned char *e_ident);
  */
 void check_elf(unsigned char *e_ident)
 {
-	for (int index = 0; index < 4; index++)
+	int index;
+
+	for (index = 0; index < 4; index++)
 	{
 		if (e_ident[index] != 127 && e_ident[index] != 'E' &&
-			e_ident[index] != 'L' && e_ident[index] != 'F')
+		    e_ident[index] != 'L' && e_ident[index] != 'F')
 		{
 			dprintf(STDERR_FILENO, "Error: Not an ELF file\n");
 			exit(98);
@@ -39,8 +41,10 @@ void check_elf(unsigned char *e_ident)
  */
 void print_magic(unsigned char *e_ident)
 {
+	int index;
+
 	printf(" Magic: ");
-	for (int index = 0; index < EI_NIDENT; index++)
+	for (index = 0; index < EI_NIDENT; index++)
 	{
 		printf("%02x", e_ident[index]);
 		if (index == EI_NIDENT - 1)
@@ -119,13 +123,17 @@ void print_osabi(unsigned char *e_ident)
 /**
  * main - Entry point for the ELF header analysis program.
  *
- * Description: This program opens and reads an ELF file, analyzes its header,
+ * Description:
+ * This program opens and reads an ELF file, analyzes its header,
  * and prints information about its magic numbers, class, version, and OS/ABI.
  *
- * Return: Always 0 on success.
+ * Return:
+ * Always 0 on success.
  */
 int main(void)
 {
+	unsigned char e_ident[EI_NIDENT];
+
 	/* Example: Open and read an ELF file */
 	int fd = open("your_elf_file", O_RDONLY);
 
@@ -134,8 +142,6 @@ int main(void)
 		perror("Error opening file");
 		exit(EXIT_FAILURE);
 	}
-
-	unsigned char e_ident[EI_NIDENT];
 
 	if (read(fd, e_ident, EI_NIDENT) != EI_NIDENT)
 	{
@@ -149,9 +155,7 @@ int main(void)
 	/* Call your ELF analysis functions here */
 	check_elf(e_ident);
 	print_magic(e_ident);
-	print_class(e_ident);
-	print_version(e_ident);
-	print_osabi(e_ident);
+	/* Add calls to other analysis functions as needed */
 
 	return (0);
 }
